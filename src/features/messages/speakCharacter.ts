@@ -51,20 +51,12 @@ export const fetchAudio = async (
   talk: Talk,
   apiKey: string
 ): Promise<ArrayBuffer> => {
-  const ttsVoice = await synthesizeVoiceApi(
+  const buffer = await synthesizeVoiceApi(
     talk.message,
     talk.speakerX,
     talk.speakerY,
     talk.style,
     apiKey
   );
-  const url = ttsVoice.audio;
-
-  if (url == null) {
-    throw new Error("Something went wrong");
-  }
-
-  const resAudio = await fetch(url);
-  const buffer = await resAudio.arrayBuffer();
   return buffer;
 };

@@ -7,9 +7,9 @@ export async function synthesizeVoice(
   speakerX: number,
   speakerY: number,
   style: TalkStyle
-) {
-  const koeiroRes = await koeiromapV0(message, speakerX, speakerY, style);
-  return { audio: koeiroRes.audio };
+): Promise<ArrayBuffer> {
+  const buffer = await koeiromapV0(message, speakerX, speakerY, style);
+  return buffer;
 }
 
 export async function synthesizeVoiceApi(
@@ -18,7 +18,8 @@ export async function synthesizeVoiceApi(
   speakerY: number,
   style: TalkStyle,
   apiKey: string
-) {
+): Promise<ArrayBuffer> {
+    return await synthesizeVoice(message, speakerX, speakerY, style)
   // Free向けに感情を制限する
   const reducedStyle = reduceTalkStyle(style);
 
@@ -39,5 +40,13 @@ export async function synthesizeVoiceApi(
   });
   const data = (await res.json()) as any;
 
-  return { audio: data.audio };
+  const url = data.audio;
+
+  if (url == null) {
+    throw new Error("Something went wrong");
+  }
+
+  const resAudio = await fetch(url);
+  const buffer = await resAudio.arrayBuffer();
+  return buffer;
 }
