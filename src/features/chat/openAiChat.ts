@@ -7,6 +7,7 @@ export async function getChatResponse(messages: Message[], apiKey: string) {
   }
 
   const configuration = new Configuration({
+    baseURL: 'http://127.0.0.1:11434/v1',
     apiKey: apiKey,
   });
   // ブラウザからAPIを叩くときに発生するエラーを無くすworkaround
@@ -16,7 +17,7 @@ export async function getChatResponse(messages: Message[], apiKey: string) {
   const openai = new OpenAIApi(configuration);
 
   const { data } = await openai.createChatCompletion({
-    model: "gpt-3.5-turbo",
+    model: "gemma2:9b",
     messages: messages,
   });
 
@@ -38,11 +39,13 @@ export async function getChatResponseStream(
     "Content-Type": "application/json",
     Authorization: `Bearer ${apiKey}`,
   };
-  const res = await fetch("https://api.openai.com/v1/chat/completions", {
+  const URL = "http://127.0.0.1:11434/v1/chat/completions";
+//   const URL = "https://api.openai.com/v1/chat/completions";
+  const res = await fetch(URL, {
     headers: headers,
     method: "POST",
     body: JSON.stringify({
-      model: "gpt-3.5-turbo",
+      model: "gemma2:9b",
       messages: messages,
       stream: true,
       max_tokens: 200,
