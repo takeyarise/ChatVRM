@@ -1,3 +1,4 @@
+import { Buffer  } from "buffer";
 import { TalkStyle } from "../messages/messages";
 
 
@@ -8,13 +9,10 @@ export async function voicevox(message: string, talkStyle?: TalkStyle) {
     }
 
     const query = await fetch(
-        'http://127.0.0.1:50021/audio_query',
+        'http://127.0.0.1:50021/audio_query'
+        + '?speaker=3&text=' + encodeURIComponent(message),
         {
             method: 'POST',
-            body: JSON.stringify({
-                text: message,
-                speaker: 3
-            })
         }
     )
 
@@ -22,22 +20,31 @@ export async function voicevox(message: string, talkStyle?: TalkStyle) {
         return;
     }
 
+    const tts_json = await query.json();
+    tts_json['speedScale'] = 1;
+    tts_json['pitchScale'] = 1;
+    tts_json['intonationScale'] = 1;
     const response = await fetch(
-        'http://127.0.0.1:50021/synthesis',
+        'http://127.0.0.1:50021/synthesis'
+        + '?speaker=3',
         {
             method: 'POST',
-            body: JSON.stringify({
-                speaker: 3,
-                body: query.body
-            })
+            headers: {
+                'Content-Type': 'application/json',
+                'Transfer-Encoding': 'chunked',
+            },
+            body: JSON.stringify(tts_json),
         }
     )
+    console.debug('voicevox', response);
 
-    if (response.status !==  200){
+    if (!response.body){
         return;
     }
 
-    return { audio: response.body.audio };
+    const res_body = response.body
+    const base = Buffer.from(String.fromCharCode(...res_body)).toString('base64')
+    return { audio: 'data:audio/wav;base64,' + base };
 }
 
 export async function koeiromapV0(
