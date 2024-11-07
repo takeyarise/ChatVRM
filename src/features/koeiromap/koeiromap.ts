@@ -52,14 +52,3 @@ export async function koeiromapV0(
   const ret = voicevox(message, style);
   return ret;
 }
-
-export async function koeiromapFreeV1(
-  message: string,
-  speakerX: number,
-  speakerY: number,
-  style: "talk" | "happy" | "sad",
-  apiKey: string
-) {
-  const ret = voicevox(message, style);
-  return ret;
-}

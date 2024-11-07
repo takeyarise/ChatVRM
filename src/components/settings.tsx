@@ -13,34 +13,28 @@ import { Link } from "./link";
 
 type Props = {
   openAiKey: string;
-  systemPrompt: string;
   chatLog: Message[];
   koeiroParam: KoeiroParam;
   koeiromapKey: string;
   onClickClose: () => void;
   onChangeAiKey: (event: React.ChangeEvent<HTMLInputElement>) => void;
-  onChangeSystemPrompt: (event: React.ChangeEvent<HTMLTextAreaElement>) => void;
   onChangeChatLog: (index: number, text: string) => void;
   onChangeKoeiroParam: (x: number, y: number) => void;
   onClickOpenVrmFile: () => void;
   onClickResetChatLog: () => void;
-  onClickResetSystemPrompt: () => void;
   onChangeKoeiromapKey: (event: React.ChangeEvent<HTMLInputElement>) => void;
 };
 export const Settings = ({
   openAiKey,
   chatLog,
-  systemPrompt,
   koeiroParam,
   koeiromapKey,
   onClickClose,
-  onChangeSystemPrompt,
   onChangeAiKey,
   onChangeChatLog,
   onChangeKoeiroParam,
   onClickOpenVrmFile,
   onClickResetChatLog,
-  onClickResetSystemPrompt,
   onChangeKoeiromapKey,
 }: Props) => {
   return (
@@ -86,22 +80,6 @@ export const Settings = ({
             <div className="my-8">
               <TextButton onClick={onClickOpenVrmFile}>VRMを開く</TextButton>
             </div>
-          </div>
-          <div className="my-40">
-            <div className="my-8">
-              <div className="my-16 typography-20 font-bold">
-                キャラクター設定（システムプロンプト）
-              </div>
-              <TextButton onClick={onClickResetSystemPrompt}>
-                キャラクター設定リセット
-              </TextButton>
-            </div>
-
-            <textarea
-              value={systemPrompt}
-              onChange={onChangeSystemPrompt}
-              className="px-16 py-8  bg-surface1 hover:bg-surface1-hover h-168 rounded-8 w-full"
-            ></textarea>
           </div>
           <div className="my-40">
             <div className="my-16 typography-20 font-bold">声の調整</div>

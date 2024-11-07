@@ -1,31 +1,4 @@
-import { Configuration, OpenAIApi } from "openai";
 import { Message } from "../messages/messages";
-
-export async function getChatResponse(messages: Message[], apiKey: string) {
-  if (!apiKey) {
-    throw new Error("Invalid API Key");
-  }
-
-  const configuration = new Configuration({
-    baseURL: 'http://127.0.0.1:11434/v1',
-    apiKey: apiKey,
-  });
-  // ブラウザからAPIを叩くときに発生するエラーを無くすworkaround
-  // https://github.com/openai/openai-node/issues/6#issuecomment-1492814621
-  delete configuration.baseOptions.headers["User-Agent"];
-
-  const openai = new OpenAIApi(configuration);
-
-  const { data } = await openai.createChatCompletion({
-    model: "gemma2:9b",
-    messages: messages,
-  });
-
-  const [aiRes] = data.choices;
-  const message = aiRes.message?.content || "エラーが発生しました";
-
-  return { message: message };
-}
 
 export async function getChatResponseStream(messages: Message[], apiKey: string) {
     const headers: Record<string, string> = {
@@ -37,7 +10,6 @@ export async function getChatResponseStream(messages: Message[], apiKey: string)
         headers: headers,
         method: "POST",
         body: JSON.stringify({
-            model: "gemma2:9b",
             messages: messages,
             stream: true,
             max_tokens: 200,

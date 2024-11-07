@@ -58,6 +58,21 @@ export const MessageInputContainer = ({
     onChatProcessStart(userMessage);
   }, [onChatProcessStart, userMessage]);
 
+  // キーボードイベントリスナーを追加
+  useEffect(() => {
+    const handleKeyDown = (event: KeyboardEvent) => {
+      if (event.key === "Enter") { // Enterキーを押したときに音声認識を開始
+        handleClickMicButton();
+      }
+    };
+
+    window.addEventListener("keydown", handleKeyDown);
+
+    return () => {
+      window.removeEventListener("keydown", handleKeyDown);
+    };
+  }, [handleClickMicButton]);
+
   useEffect(() => {
     const SpeechRecognition =
       window.webkitSpeechRecognition || window.SpeechRecognition;
